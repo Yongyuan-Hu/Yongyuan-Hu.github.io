@@ -654,6 +654,48 @@
     }
     .demo__controls label { display: inline-flex; align-items: center; gap: var(--s-2); }
 
+    /* Compact demos in half-width cards (Claude, steps 3 to 6) */
+    .demo--compact { aspect-ratio: 4 / 3; }
+    .demo__swatch { width: 10px; height: 10px; border-radius: 2px; background: var(--accent); display: inline-block; }
+    .demo__readout { color: var(--ink); font-variant-numeric: tabular-nums; }
+    .demo__seg { display: inline-flex; border: 1px solid var(--rule); border-radius: var(--r-pill); overflow: hidden; }
+    .demo__seg button {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      padding: 4px 12px;
+      color: var(--ink-2);
+      font-size: var(--fs-xs);
+      cursor: pointer;
+      transition: background var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out);
+    }
+    .demo__seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+    .demo__seg button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .demo__swatch--line { background: transparent; border: 1px dashed var(--ink-2); }
+    .demo__swatch--dot { border-radius: 50%; }
+    .demo__swatch--ink { background: var(--ink); }
+    .demo__controls--stack { flex-direction: column; align-items: stretch; gap: var(--s-2); }
+    .demo__slider { display: flex; align-items: center; gap: var(--s-3); font-size: var(--fs-xs); color: var(--ink-2); }
+    .demo__slider input[type="range"] { flex: 1; width: auto; accent-color: var(--accent); }
+    .demo__slider output { min-width: 3.5em; text-align: right; color: var(--ink); font-variant-numeric: tabular-nums; }
+    .demo--compact.demo--click canvas { cursor: pointer; }
+    .demo__btn {
+      padding: 4px 14px;
+      border: 1px solid var(--rule);
+      border-radius: var(--r-pill);
+      background: transparent;
+      color: var(--ink);
+      font-size: var(--fs-xs);
+      cursor: pointer;
+      transition: border-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out);
+    }
+    .demo__btn:hover { border-color: var(--accent); color: var(--accent); }
+    .demo__btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    /* Bullet list inside an .edu__detail (Industry section) */
+    .edu__detail--list ul { margin: 0; padding-left: var(--s-5); display: grid; gap: 4px; text-align: left; }
+    .edu__detail--list li { line-height: var(--lh-body); }
+
     input[type="range"] {
       -webkit-appearance: none;
       appearance: none;
@@ -742,6 +784,15 @@
       line-height: 1.12;
       letter-spacing: var(--tracking-head);
       max-width: 18ch;
+    }
+
+    .about__photo {
+      width: min(280px, 100%);
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-top: var(--s-6);
+      display: block;
     }
 
     .about__body { color: var(--ink-2); max-width: var(--measure); }
@@ -997,9 +1048,12 @@
       <nav aria-label="Primary">
         <ul class="nav__links" id="nav-links">
           <li><a href="#work">Work</a></li>
+          <li><a href="#industry">Industry</a></li>
           <li><a href="#skills">Skills</a></li>
           <li><a href="#about">About</a></li>
+          <li><a href="#teaching">Teaching</a></li>
           <li><a href="#education">Education</a></li>
+          <li><a href="#extracurricular">Extracurricular</a></li>
           <li><a class="nav__cta" href="#contact">Contact</a></li>
         </ul>
       </nav>
@@ -1010,11 +1064,6 @@
     <!-- ===== HERO ===== -->
     <section class="hero" id="top" aria-labelledby="hero-name">
       <div class="container">
-        <p class="hero__status">
-          <span class="status-dot" aria-hidden="true"></span>
-          Available for full-time roles from summer 2027
-        </p>
-
         <h1 class="hero__name t-hero" id="hero-name">
           <span class="line"><span>Derrick</span></span>
           <span class="line"><span>Hu</span></span>
@@ -1071,7 +1120,7 @@
             <span class="muted">Physics sets the structure, deep learning fills in the detail, and the result runs fast enough to use.</span>
           </p>
           <div class="prose">
-            <p>My research covers terrain, indoor and tunnel propagation, with three first or co-first author papers. Before that I shipped computer vision on edge hardware at builderX Robotics. The long-term aim is aerospace and space communications.</p>
+            <p>My research covers terrain, indoor and tunnel propagation, with three first or co-first author papers. Before that I shipped computer vision on edge hardware at BuilderX Robotics. The long-term aim is aerospace and space communications.</p>
           </div>
         </div>
 
@@ -1158,6 +1207,23 @@
               <li>Under review, IEEE Wireless Communications Letters</li>
               <li>Wall F1 0.166 to 0.792</li>
             </ul>
+            <div class="demo demo--compact">
+              <canvas id="wall-canvas" role="img" aria-label="Floor-plan grid with a few sensors. Stage 1 reconstruction. Wall F1 0.166">Your browser does not support the canvas element.</canvas>
+              <p class="demo__hint">Two-stage Transformer, 20,000-scene benchmark</p>
+              <div class="demo__legend" aria-hidden="true">
+                <span class="demo__swatch"></span><span>Wall</span>
+                <span class="demo__swatch demo__swatch--line"></span><span>True wall</span>
+                <span class="demo__swatch demo__swatch--dot"></span><span>Sensor</span>
+              </div>
+            </div>
+            <div class="demo__controls">
+              <div class="demo__seg" role="group" aria-label="Training stage">
+                <button type="button" data-stage="1" aria-pressed="true">Stage 1</button>
+                <button type="button" data-stage="2" aria-pressed="false">Stage 2</button>
+              </div>
+              <span class="demo__readout">Wall F1 <output id="wall-f1">0.166</output></span>
+            </div>
+            <p class="t-xs" style="margin-top: var(--s-4);">Illustrative floor plan, not model output. Stage 2 uses two-stage training to avoid encoder collapse.</p>
           </article>
 
           <!-- 04 -->
@@ -1171,13 +1237,32 @@
             <ul class="card__facts">
               <li>Accepted, ICCEM 2026</li>
             </ul>
+            <div class="demo demo--compact">
+              <canvas id="tunnel-canvas" role="img" aria-label="Tunnel field reconstruction. Slice at 500 metres, sparsity 1 in 16. Coarse samples and a reconstructed field">Your browser does not support the canvas element.</canvas>
+              <p class="demo__hint">GRU, sequential multi-slice fusion, tunnel up to 1,000 m</p>
+              <div class="demo__legend" aria-hidden="true">
+                <span class="demo__swatch demo__swatch--dot"></span><span>Coarse sample</span>
+                <span class="demo__swatch"></span><span>Reconstructed field</span>
+              </div>
+            </div>
+            <div class="demo__controls demo__controls--stack">
+              <label class="demo__slider">Slice position
+                <input type="range" id="tunnel-pos" min="0" max="1000" step="10" value="500" aria-describedby="tunnel-pos-out">
+                <output id="tunnel-pos-out">500 m</output>
+              </label>
+              <label class="demo__slider">Sample sparsity
+                <input type="range" id="tunnel-sparse" min="0" max="2" step="1" value="1">
+                <output id="tunnel-sparse-out">1 in 16</output>
+              </label>
+            </div>
+            <p class="t-xs" style="margin-top: var(--s-4);">Illustrative field, not model output. Coarse-to-fine reconstruction from sparse coarse-grid measurements.</p>
           </article>
 
           <!-- 05 -->
           <article class="card">
             <div class="card__top">
               <span class="card__num">05</span>
-              <span class="card__cat">Industry, builderX Robotics</span>
+              <span class="card__cat">Industry, BuilderX Robotics</span>
             </div>
             <h3 class="card__title">Computer vision on edge hardware</h3>
             <p class="card__desc">As a computer vision algorithm engineer intern, I deployed SPNet point-cloud reconstruction at under 80 ms per frame on NVIDIA Jetson, and built a YOLOv5 to TensorRT detection pipeline with precision and recall above 0.98.</p>
@@ -1186,6 +1271,26 @@
               <li>Precision and recall above 0.98</li>
               <li>NVIDIA Jetson, TensorRT</li>
             </ul>
+            <div class="demo demo--compact demo--drag">
+              <canvas id="cloud-canvas" role="img" aria-label="Rotating 3D point cloud showing the sparse input. Original model, about 150 ms per frame on NVIDIA Jetson">Your browser does not support the canvas element.</canvas>
+              <p class="demo__hint">Drag to rotate</p>
+              <div class="demo__legend" aria-hidden="true">
+                <span class="demo__swatch demo__swatch--dot demo__swatch--ink"></span><span>Sparse input</span>
+                <span class="demo__swatch demo__swatch--dot"></span><span>Reconstructed</span>
+              </div>
+            </div>
+            <div class="demo__controls">
+              <div class="demo__seg" role="group" aria-label="Point cloud">
+                <button type="button" data-cloud="sparse" aria-pressed="true">Sparse</button>
+                <button type="button" data-cloud="dense" aria-pressed="false">Dense</button>
+              </div>
+              <div class="demo__seg" role="group" aria-label="Model version">
+                <button type="button" data-prune="before" aria-pressed="true">Original</button>
+                <button type="button" data-prune="after" aria-pressed="false">Pruned</button>
+              </div>
+              <span class="demo__readout"><output id="cloud-latency">about 150 ms</output> per frame</span>
+            </div>
+            <p class="t-xs" style="margin-top: var(--s-4);">Illustrative scene, not SPNet output. The latency values are SPNet's per-frame inference on NVIDIA Jetson before and after pruning and redesign.</p>
           </article>
 
           <!-- 06 -->
@@ -1200,8 +1305,49 @@
               <li>C#</li>
               <li>Subsystem interface design</li>
             </ul>
+            <div class="demo demo--compact demo--click">
+              <canvas id="track-canvas" role="img" aria-label="Track loop with a train moving between blocks. Occupied: Block 1">Your browser does not support the canvas element.</canvas>
+              <p class="demo__hint">Tap to pause or play</p>
+              <div class="demo__legend" aria-hidden="true">
+                <span class="demo__swatch"></span><span>Occupied</span>
+                <span class="demo__swatch demo__swatch--line"></span><span>Free</span>
+              </div>
+            </div>
+            <div class="demo__controls">
+              <button type="button" class="demo__btn" id="track-play">Pause</button>
+              <span class="demo__readout">Occupied: <output id="track-occ">Block 1</output></span>
+            </div>
+            <p class="t-xs" style="margin-top: var(--s-4);">Illustrative layout, not the project's track data. UPitt ECE 1140 team project.</p>
           </article>
         </div>
+      </div>
+    </section>
+
+    <!-- ===== INDUSTRY ===== -->
+    <section class="section" id="industry" aria-labelledby="industry-title">
+      <div class="container">
+        <header class="section__head">
+          <h2 class="section__title" id="industry-title">Industry <span class="slash">/</span></h2>
+        </header>
+
+        <ol class="edu">
+          <li class="edu__item">
+            <span class="edu__date">Jul 2026 to Aug 2026</span>
+            <div>
+              <h3 class="edu__school">BuilderX Robotics</h3>
+              <p class="edu__degree">Computer Vision Algorithm Engineer Intern, Intelligent Systems Department, Beijing, China</p>
+            </div>
+            <div class="edu__detail edu__detail--list">
+              <ul>
+                <li>Implemented SPNet, a CNN fusing RGB and depth to reconstruct dense 3D point clouds from sparse point clouds.</li>
+                <li>Optimized it for embedded inference by pruning and redesign, from about 150 ms to under 80 ms per frame on NVIDIA Jetson.</li>
+                <li>Built a Transformer-based 3D reconstruction pipeline for excavator videos using learned frame selection, multi-view geometry and Gaussian Splatting.</li>
+                <li>Built a YOLOv5-to-TensorRT detection pipeline with precision and recall above 0.98.</li>
+                <li>Worked on site in English with clients in Chile and Malaysia and personally delivered the on-site training together with the technician.</li>
+              </ul>
+            </div>
+          </li>
+        </ol>
       </div>
     </section>
 
@@ -1279,12 +1425,15 @@
         </header>
 
         <div class="about">
-          <p class="about__statement">I want signals to reach further, starting with the models that predict them.</p>
+          <div>
+            <p class="about__statement">I want signals to reach further, starting with the models that predict them.</p>
+            <img class="about__photo" src="profile.jpg" alt="Portrait of Derrick Hu" width="400" height="400" loading="lazy">
+          </div>
 
           <div>
             <div class="about__body">
               <p>I'm Derrick Hu (Yongyuan Hu), a Computer Engineering senior at UPitt's Swanson School of Engineering. I research physics-guided deep learning for RF propagation with Prof. Hao Qin, and I teach as a TA for ECE 1212, Electronic Circuit Design Lab.</p>
-              <p>At builderX Robotics I took vision models from training to real-time inference on NVIDIA Jetson, and worked on site in English with clients in Chile and Malaysia. My long-term goal is aerospace and space communications, where accurate, fast propagation models matter most.</p>
+              <p>At BuilderX Robotics I took vision models from training to real-time inference on NVIDIA Jetson, and worked on site in English with clients in Chile and Malaysia. My long-term goal is aerospace and space communications, where accurate, fast propagation models matter most.</p>
             </div>
 
             <dl class="about__facts">
@@ -1303,6 +1452,53 @@
             </dl>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- ===== TEACHING ===== -->
+    <section class="section" id="teaching" aria-labelledby="teaching-title">
+      <div class="container">
+        <header class="section__head">
+          <h2 class="section__title" id="teaching-title">Teaching <span class="slash">/</span></h2>
+        </header>
+
+        <ol class="edu">
+          <li class="edu__item">
+            <span class="edu__date">Aug 2026 to Present</span>
+            <div>
+              <h3 class="edu__school">University of Pittsburgh</h3>
+              <p class="edu__degree">Undergraduate Teaching Assistant, Electronic Circuit Design Lab (ECE 1212)</p>
+            </div>
+            <p class="edu__detail">Weekly lab sessions on amplifier design under Dr. Rajkumar Kubendran. Circuit construction, oscilloscope and function-generator operation, troubleshooting, and grading lab reports.<br>Pittsburgh, PA</p>
+          </li>
+
+          <li class="edu__item">
+            <span class="edu__date">Feb 2026 to Jul 2026</span>
+            <div>
+              <h3 class="edu__school">Sichuan University–Pittsburgh Institute (SCUPI)</h3>
+              <p class="edu__degree">Teaching Assistant, Data Structures &amp; Algorithms (ECE 0302)</p>
+            </div>
+            <p class="edu__detail">Tutoring on trees, graphs, hashing and complexity analysis. Graded quizzes and programming homework.<br>Chengdu, China</p>
+          </li>
+
+          <li class="edu__item">
+            <span class="edu__date">Feb 2026 to Jul 2026</span>
+            <div>
+              <h3 class="edu__school">Sichuan University–Pittsburgh Institute (SCUPI)</h3>
+              <p class="edu__degree">Teaching Assistant, Signals, Systems &amp; Probability (ECE 0402)</p>
+            </div>
+            <p class="edu__detail">Recitation and office hours on Fourier analysis, LTI systems and probability. Graded quizzes and homework. All instruction and materials in English.<br>Chengdu, China</p>
+          </li>
+
+          <li class="edu__item">
+            <span class="edu__date">Sep 2025 to Jan 2026</span>
+            <div>
+              <h3 class="edu__school">Sichuan University–Pittsburgh Institute (SCUPI)</h3>
+              <p class="edu__degree">Grader, Introduction to Optimization (MATH 1101)</p>
+            </div>
+            <p class="edu__detail">Graded quizzes and homework covering linear programming and convex formulations.<br>Chengdu, China</p>
+          </li>
+        </ol>
       </div>
     </section>
 
@@ -1335,6 +1531,53 @@
       </div>
     </section>
   </main>
+
+    <!-- ===== EXTRACURRICULAR ===== -->
+    <section class="section" id="extracurricular" aria-labelledby="extracurricular-title">
+      <div class="container">
+        <header class="section__head">
+          <h2 class="section__title" id="extracurricular-title">Extracurricular <span class="slash">/</span></h2>
+        </header>
+
+        <ol class="edu">
+          <li class="edu__item">
+            <span class="edu__date"></span>
+            <div>
+              <h3 class="edu__school">SCUPI basketball team</h3>
+              <p class="edu__degree">Captain</p>
+            </div>
+            <p class="edu__detail">Led the Sichuan University-Pittsburgh Institute team.</p>
+          </li>
+
+          <li class="edu__item">
+            <span class="edu__date">Nov 2026</span>
+            <div>
+              <h3 class="edu__school">ALPFA, University of Pittsburgh chapter</h3>
+              <p class="edu__degree">Member</p>
+            </div>
+            <p class="edu__detail">Joined November 2026.</p>
+          </li>
+
+          <li class="edu__item">
+            <span class="edu__date"></span>
+            <div>
+              <h3 class="edu__school">Chinese-English consecutive interpreting</h3>
+              <p class="edu__degree"></p>
+            </div>
+            <p class="edu__detail"></p>
+          </li>
+
+          <li class="edu__item">
+            <span class="edu__date"></span>
+            <div>
+              <h3 class="edu__school">Weightlifting</h3>
+              <p class="edu__degree"></p>
+            </div>
+            <p class="edu__detail"></p>
+          </li>
+        </ol>
+      </div>
+    </section>
 
   <!-- ===== CONTACT FOOTER ===== -->
   <footer class="footer" id="contact" aria-labelledby="contact-title">
@@ -1398,7 +1641,7 @@
       if (!reduce && window.gsap) {
         const gsap = window.gsap;
         gsap.from('.hero__name .line > span', { yPercent: 110, duration: 1.1, ease: 'power4.out', stagger: 0.09, delay: 0.1 });
-        gsap.from('.hero__status, .hero__meta', { opacity: 0, y: 16, duration: 0.9, ease: 'power3.out', stagger: 0.1, delay: 0.5 });
+        gsap.from('.hero__meta', { opacity: 0, y: 16, duration: 0.9, ease: 'power3.out', stagger: 0.1, delay: 0.5 });
 
         if (window.ScrollTrigger) {
           gsap.registerPlugin(window.ScrollTrigger);
@@ -1557,6 +1800,500 @@
       else window.addEventListener('resize', resize);
 
       updateOutputs();
+      resize();
+    });
+  </script>
+  <script>
+    /* ---------- Card 03: indoor wall geometry, Stage 1 vs Stage 2 ---------- */
+    document.addEventListener('DOMContentLoaded', () => {
+      const canvas = document.getElementById('wall-canvas');
+      const f1Out = document.getElementById('wall-f1');
+      const btns = document.querySelectorAll('[data-stage]');
+      if (!canvas || !canvas.getContext || !f1Out || !btns.length) return;
+      const ctx = canvas.getContext('2d');
+      const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const hash = (a, b) => { const x = Math.sin(a * 127.1 + b * 311.7) * 43758.5453; return x - Math.floor(x); };
+      const N = 14;
+      const SENSORS = [[2, 2], [11, 3], [3, 11], [10, 10], [7, 6]];
+      const STAGES = {
+        '1': { label: 'Stage 1', f1: '0.166', correct: 0.14, guess: 0.72, ghost: 0.1 },
+        '2': { label: 'Stage 2', f1: '0.792', correct: 0.84, guess: 0.08, ghost: 0.02 }
+      };
+      const TRUE = new Set();
+      const inWall = (i, j) =>
+        i === 0 || j === 0 || i === N - 1 || j === N - 1 ||
+        (i === 6 && j >= 3 && j <= 10) || (j === 8 && i >= 6 && i <= 11);
+      for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) if (inWall(i, j)) TRUE.add(i + ',' + j);
+      const guesses = new Map();
+      for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
+        const key = i + ',' + j;
+        if (TRUE.has(key)) guesses.set(key, { p: 0.14 + 0.68 * hash(i, j), shown: true });
+        else guesses.set(key, { p: hash(i + 40, j + 7), shown: hash(i + 9, j + 3) < 0.16 });
+      }
+      let W = 0, H = 0, stage = '1', shown = 0, target = 1, raf = 0, last = 0;
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        const accent = css('--accent'), ink = css('--ink'), ink2 = css('--ink-2'), grid = css('--rule');
+        const pad = 12, m = Math.min(W, H) - 2 * pad, cell = m / N;
+        ctx.lineWidth = 1; ctx.strokeStyle = grid;
+        for (let k = 0; k <= N; k++) {
+          ctx.beginPath(); ctx.moveTo(pad + k * cell, pad); ctx.lineTo(pad + k * cell, pad + m); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(pad, pad + k * cell); ctx.lineTo(pad + m, pad + k * cell); ctx.stroke();
+        }
+        ctx.setLineDash([3, 3]);
+        ctx.strokeStyle = ink2; ctx.lineWidth = 1.5;
+        for (const key of TRUE) {
+          const [i, j] = key.split(',').map(Number);
+          ctx.strokeRect(pad + i * cell + 2, pad + j * cell + 2, cell - 4, cell - 4);
+        }
+        ctx.setLineDash([]);
+        const st = STAGES[stage];
+        ctx.fillStyle = accent;
+        for (const [key, g] of guesses) {
+          const [i, j] = key.split(',').map(Number);
+          const isTrue = TRUE.has(key);
+          const p = isTrue ? st.correct + (1 - st.correct) * g.p : (g.shown ? st.guess : st.ghost);
+          if (shown >= p) ctx.fillRect(pad + i * cell + 1.5, pad + j * cell + 1.5, cell - 3, cell - 3);
+        }
+        for (const [i, j] of SENSORS) {
+          ctx.beginPath();
+          ctx.arc(pad + (i + 0.5) * cell, pad + (j + 0.5) * cell, 4, 0, Math.PI * 2);
+          ctx.fillStyle = ink; ctx.fill();
+          ctx.beginPath(); ctx.arc(pad + (i + 0.5) * cell, pad + (j + 0.5) * cell, 6.5, 0, Math.PI * 2);
+          ctx.lineWidth = 1; ctx.strokeStyle = ink2; ctx.stroke();
+        }
+      }
+      function loop(t) {
+        raf = 0;
+        const dt = last ? Math.min(50, t - last) : 16;
+        last = t;
+        if (shown < target) shown = Math.min(target, shown + dt / 700);
+        draw();
+        if (shown < target) raf = requestAnimationFrame(loop);
+        else last = 0;
+      }
+      const kick = () => { if (!raf) raf = requestAnimationFrame(loop); };
+      function setStage(s) {
+        stage = s;
+        target = 1; shown = reduce ? 1 : 0;
+        btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.stage === s)));
+        f1Out.textContent = STAGES[s].f1;
+        canvas.setAttribute('aria-label',
+          'Floor-plan grid with a few sensors. ' + STAGES[s].label + ' reconstruction. Wall F1 ' + STAGES[s].f1);
+        kick();
+      }
+      btns.forEach(b => b.addEventListener('click', () => setStage(b.dataset.stage)));
+      function resize() {
+        const rect = canvas.getBoundingClientRect();
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        W = rect.width; H = rect.height;
+        canvas.width = Math.round(W * dpr);
+        canvas.height = Math.round(H * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        shown = target;
+        draw();
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', draw);
+      if ('ResizeObserver' in window) new ResizeObserver(resize).observe(canvas);
+      else window.addEventListener('resize', resize);
+      setStage('1');
+      resize();
+    });
+  </script>
+  <script>
+    /* ---------- Card 04: tunnel field reconstruction demo ---------- */
+    document.addEventListener('DOMContentLoaded', () => {
+      const canvas = document.getElementById('tunnel-canvas');
+      const posIn = document.getElementById('tunnel-pos');
+      const posOut = document.getElementById('tunnel-pos-out');
+      const sparseIn = document.getElementById('tunnel-sparse');
+      const sparseOut = document.getElementById('tunnel-sparse-out');
+      if (!canvas || !canvas.getContext || !posIn || !posOut || !sparseIn || !sparseOut) return;
+      const ctx = canvas.getContext('2d');
+      const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+      const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+      const smooth = t => t * t * (3 - 2 * t);
+      const L = 1000;
+      const SPARSITY = [8, 16, 32];
+      const TOP = 34, BOTTOM = 58, PAD = 16;
+      const field = (x, y) => {
+        const u = x / L;
+        const base = 0.5 + 0.42 * Math.sin(u * 5.2 + 0.6) * Math.sin(u * 2.1 - 0.4);
+        const hot = 0.9 * Math.exp(-((u - 0.62) ** 2) / 0.008) * smooth(clamp((u - 0.1) / 0.3, 0, 1));
+        return clamp(base + hot * (0.4 + 0.6 * Math.sin(y * 9 + u * 7)), 0, 1);
+      };
+      let W = 0, H = 0, pos = 500, sparse = 1, raf = 0;
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        const accent = css('--accent'), ink = css('--ink'), ink2 = css('--ink-2'), ink3 = css('--ink-3');
+        const dim = css('--paper-3');
+        const stripH = H - TOP - BOTTOM, stripY = TOP;
+        const xOf = m => PAD + m / L * (W - 2 * PAD);
+        const step = 4;
+        for (let px = PAD; px < W - PAD; px += step) {
+          const v = field(px / (W - 2 * PAD) * L, 0.5);
+          ctx.globalAlpha = 0.18 + 0.72 * v;
+          ctx.fillStyle = accent;
+          ctx.fillRect(px, stripY, step + 0.5, stripH);
+        }
+        ctx.globalAlpha = 1;
+        const n = SPARSITY[sparse];
+        ctx.fillStyle = ink;
+        for (let m = 0; m <= L; m += n) {
+          const v = field(m, 0.5), y = stripY + stripH * (1 - v);
+          ctx.beginPath(); ctx.arc(xOf(m), y, 2.4, 0, Math.PI * 2); ctx.fill();
+        }
+        const sx = xOf(pos);
+        ctx.strokeStyle = ink2; ctx.lineWidth = 1;
+        ctx.setLineDash([4, 3]);
+        ctx.beginPath(); ctx.moveTo(sx, stripY - 6); ctx.lineTo(sx, stripY + stripH + 6); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = ink2;
+        ctx.font = '11px system-ui, sans-serif'; ctx.textAlign = 'center';
+        ctx.fillText(pos + ' m', clamp(sx, PAD + 18, W - PAD - 18), stripY - 12);
+        ctx.fillStyle = ink3; ctx.textAlign = 'left';
+        ctx.fillText('0 m', PAD, stripY + stripH + 16);
+        ctx.textAlign = 'right';
+        ctx.fillText('1,000 m', W - PAD, stripY + stripH + 16);
+        const csY = H - 34, csH = 20, csX = PAD, csW = W - 2 * PAD;
+        ctx.fillStyle = dim;
+        ctx.fillRect(csX, csY - 2, csW, csH + 4);
+        ctx.fillStyle = ink3; ctx.font = '11px system-ui, sans-serif'; ctx.textAlign = 'left';
+        ctx.fillText('Cross-section at slice', csX, csY - 8);
+        ctx.strokeStyle = ink2; ctx.lineWidth = 1.5; ctx.beginPath();
+        const coarseStep = 8;
+        for (let px = 0; px <= csW; px += 2) {
+          const y = 0.1 + 0.8 * px / csW;
+          const v = field(pos, y), cy = csY + csH * (1 - v);
+          const qx = csX + Math.floor(px / coarseStep) * coarseStep;
+          if (px === 0) ctx.moveTo(csX, cy); else ctx.lineTo(qx, cy);
+        }
+        ctx.stroke();
+        ctx.strokeStyle = accent; ctx.lineWidth = 2; ctx.beginPath();
+        for (let px = 0; px <= csW; px += 2) {
+          const y = 0.1 + 0.8 * px / csW;
+          const v = field(pos, y), cy = csY + csH * (1 - v);
+          if (px === 0) ctx.moveTo(csX, cy); else ctx.lineTo(csX + px, cy);
+        }
+        ctx.stroke();
+        ctx.fillStyle = accent;
+        ctx.fillRect(csX + csW * 0.5 - 1, csY - 2, 2, csH + 4);
+      }
+      function label() {
+        posOut.textContent = pos + ' m';
+        sparseOut.textContent = '1 in ' + SPARSITY[sparse];
+        canvas.setAttribute('aria-label',
+          'Tunnel field reconstruction. Slice at ' + pos + ' metres, sparsity 1 in ' + SPARSITY[sparse] + '. Coarse samples and a reconstructed field');
+      }
+      const kick = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; draw(); }); };
+      posIn.addEventListener('input', () => { pos = +posIn.value; label(); kick(); });
+      sparseIn.addEventListener('input', () => { sparse = +sparseIn.value; label(); kick(); });
+      function resize() {
+        const rect = canvas.getBoundingClientRect();
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        W = rect.width; H = rect.height;
+        canvas.width = Math.round(W * dpr);
+        canvas.height = Math.round(H * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        kick();
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', kick);
+      if ('ResizeObserver' in window) new ResizeObserver(resize).observe(canvas);
+      else window.addEventListener('resize', resize);
+      label();
+      resize();
+    });
+  </script>
+  <script>
+    /* ---------- Card 05: point cloud densification + latency demo ---------- */
+    document.addEventListener('DOMContentLoaded', () => {
+      const canvas = document.getElementById('cloud-canvas');
+      const latOut = document.getElementById('cloud-latency');
+      const cloudBtns = document.querySelectorAll('[data-cloud]');
+      const pruneBtns = document.querySelectorAll('[data-prune]');
+      if (!canvas || !canvas.getContext || !latOut || !cloudBtns.length || !pruneBtns.length) return;
+      const ctx = canvas.getContext('2d');
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+      const hash = (a, b, s) => { const x = Math.sin(a * 127.1 + b * 311.7 + s * 74.7) * 43758.5453; return x - Math.floor(x); };
+      const LATENCY = { before: 'about 150 ms', after: 'under 80 ms' };
+      const SPARSE = 0.1;
+      const PITCH = 0.42, DUR = 1400;
+      const TOP = 34, BOTTOM = 30;
+      const pts = [];
+      const add = (x, y, z, k) => pts.push({ x, y, z, r: hash(x * 50, z * 50, k) });
+      const box = { x: -0.65, z: 0.25, w: 0.5, d: 0.5, h: 0.42 };
+      const inBox = (x, z) => Math.abs(x - box.x) < box.w / 2 && Math.abs(z - box.z) < box.d / 2;
+      for (let i = 0; i < 48; i++) {
+        for (let j = 0; j < 30; j++) {
+          const x = -1.6 + (i + 0.5 + (hash(i, j, 1) - 0.5) * 0.6) / 48 * 3.2;
+          const z = -1 + (j + 0.5 + (hash(i, j, 2) - 0.5) * 0.6) / 30 * 2;
+          if (inBox(x, z)) continue;
+          const y = 0.03 * Math.sin(x * 4 + z * 3) + 0.35 * Math.exp(-((x - 0.5) ** 2 + (z + 0.1) ** 2) / 0.12);
+          add(x, y, z, 3);
+        }
+      }
+      for (let a = 0; a < 12; a++) {
+        for (let b = 0; b < 12; b++) {
+          const u = (a + 0.5) / 12 - 0.5, v = (b + 0.5) / 12;
+          add(box.x + u * box.w, box.h, box.z + (v - 0.5) * box.d, 4);
+          add(box.x + u * box.w, v * box.h, box.z + box.d / 2, 5);
+          add(box.x + u * box.w, v * box.h, box.z - box.d / 2, 6);
+          add(box.x - box.w / 2, v * box.h, box.z + u * box.d, 7);
+          add(box.x + box.w / 2, v * box.h, box.z + u * box.d, 8);
+        }
+      }
+      let W = 0, H = 0, yaw = 0.6, density = SPARSE, target = SPARSE;
+      let raf = 0, last = 0, visible = false, dragging = false, touched = false;
+      let cloud = 'sparse', prune = 'before';
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        const accent = css('--accent'), ink = css('--ink');
+        const cY = Math.cos(yaw), sY = Math.sin(yaw), cP = Math.cos(PITCH), sP = Math.sin(PITCH);
+        const scale = Math.min(W, H - TOP - BOTTOM) * 0.42;
+        const cx = W / 2, cy = TOP + (H - TOP - BOTTOM) / 2;
+        const proj = p => {
+          const x1 = p.x * cY - p.z * sY, z1 = p.x * sY + p.z * cY;
+          const y1 = p.y * cP - z1 * sP, z2 = p.y * sP + z1 * cP;
+          const k = 3 / (3 + z2);
+          return { X: cx + x1 * scale * k, Y: cy - (y1 - 0.1) * scale * k, near: Math.min(1, Math.max(0, (1 - z2) / 2)) };
+        };
+        ctx.fillStyle = accent;
+        for (const p of pts) {
+          if (p.r < SPARSE) continue;
+          const a = Math.min(1, Math.max(0, (density - p.r) / 0.06));
+          if (a <= 0) continue;
+          const q = proj(p);
+          ctx.globalAlpha = a * (0.35 + 0.5 * q.near);
+          ctx.fillRect(q.X - 0.8, q.Y - 0.8, 1.6, 1.6);
+        }
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = ink;
+        for (const p of pts) {
+          if (p.r >= SPARSE) continue;
+          const q = proj(p);
+          ctx.fillRect(q.X - 1.3, q.Y - 1.3, 2.6, 2.6);
+        }
+      }
+      function loop(t) {
+        raf = 0;
+        const dt = last ? Math.min(50, t - last) : 16;
+        last = t;
+        if (!reduce && !dragging) yaw += dt * 0.00015;
+        if (density !== target) {
+          const step = dt / DUR * (1 - SPARSE);
+          density = target > density ? Math.min(target, density + step) : Math.max(target, density - step);
+        }
+        draw();
+        if (visible && (!reduce || density !== target)) raf = requestAnimationFrame(loop);
+        else last = 0;
+      }
+      const kick = () => { if (!raf) raf = requestAnimationFrame(loop); };
+      function updateLabel() {
+        canvas.setAttribute('aria-label',
+          'Rotating 3D point cloud showing the ' + (cloud === 'dense' ? 'dense reconstruction' : 'sparse input') + '. ' +
+          (prune === 'after' ? 'Pruned' : 'Original') + ' model, ' + LATENCY[prune] + ' per frame on NVIDIA Jetson');
+      }
+      function setCloud(c) {
+        cloud = c;
+        target = c === 'dense' ? 1 + 0.06 : SPARSE;
+        cloudBtns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.cloud === c)));
+        if (reduce) density = target;
+        updateLabel(); kick();
+      }
+      function setPrune(p) {
+        prune = p;
+        pruneBtns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.prune === p)));
+        latOut.textContent = LATENCY[p];
+        updateLabel();
+      }
+      cloudBtns.forEach(b => b.addEventListener('click', () => { touched = true; setCloud(b.dataset.cloud); }));
+      pruneBtns.forEach(b => b.addEventListener('click', () => setPrune(b.dataset.prune)));
+      let lastX = 0;
+      canvas.addEventListener('pointerdown', e => { dragging = true; lastX = e.clientX; canvas.setPointerCapture(e.pointerId); });
+      canvas.addEventListener('pointermove', e => {
+        if (!dragging) return;
+        yaw += (e.clientX - lastX) * 0.01; lastX = e.clientX; kick();
+      });
+      ['pointerup', 'pointercancel'].forEach(t => canvas.addEventListener(t, () => { dragging = false; kick(); }));
+      canvas.tabIndex = 0;
+      canvas.addEventListener('keydown', e => {
+        const d = e.shiftKey ? 0.3 : 0.1;
+        if (e.key === 'ArrowLeft') yaw -= d;
+        else if (e.key === 'ArrowRight') yaw += d;
+        else return;
+        e.preventDefault(); kick();
+      });
+      if ('IntersectionObserver' in window) {
+        let first = true;
+        new IntersectionObserver(entries => {
+          visible = entries[0].isIntersecting;
+          if (!visible) return;
+          kick();
+          if (first && !reduce) {
+            first = false;
+            setTimeout(() => { if (!touched) setCloud('dense'); }, 700);
+          }
+        }, { threshold: 0.4 }).observe(canvas);
+      } else {
+        visible = true;
+      }
+      function resize() {
+        const rect = canvas.getBoundingClientRect();
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        W = rect.width; H = rect.height;
+        canvas.width = Math.round(W * dpr);
+        canvas.height = Math.round(H * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        kick();
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', kick);
+      if ('ResizeObserver' in window) new ResizeObserver(resize).observe(canvas);
+      else window.addEventListener('resize', resize);
+      updateLabel();
+      resize();
+    });
+  </script>
+  <script>
+    /* ---------- Card 06: Track Model block occupancy demo ---------- */
+    document.addEventListener('DOMContentLoaded', () => {
+      const canvas = document.getElementById('track-canvas');
+      const btn = document.getElementById('track-play');
+      const occOut = document.getElementById('track-occ');
+      if (!canvas || !canvas.getContext || !btn || !occOut) return;
+      const ctx = canvas.getContext('2d');
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+      const N = 12;
+      const LAP_MS = 16000;
+      const TOP = 34, BOTTOM = 30, PAD = 22;
+      let W = 0, H = 0, geo = null;
+      let s = 0.06;
+      let playing = !reduce, visible = false, raf = 0, last = 0, lastText = '';
+      function layout() {
+        const w = W - 2 * PAD, h = H - TOP - BOTTOM - 12;
+        const r = Math.max(10, Math.min(h / 2, w / 4));
+        const Ls = Math.max(0, w - 2 * r);
+        geo = { x0: PAD, y0: TOP + 6 + (h - 2 * r) / 2, r, Ls, P: 2 * Ls + 2 * Math.PI * r };
+      }
+      function at(d) {
+        const { x0, y0, r, Ls, P } = geo;
+        d = ((d % P) + P) % P;
+        if (d < Ls) return { x: x0 + r + d, y: y0, nx: 0, ny: 1 };
+        d -= Ls;
+        const arc = Math.PI * r;
+        if (d < arc) {
+          const a = -Math.PI / 2 + d / r, cx = x0 + r + Ls, cy = y0 + r;
+          return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a), nx: -Math.cos(a), ny: -Math.sin(a) };
+        }
+        d -= arc;
+        if (d < Ls) return { x: x0 + r + Ls - d, y: y0 + 2 * r, nx: 0, ny: -1 };
+        d -= Ls;
+        const a = Math.PI / 2 + d / r, cx = x0 + r, cy = y0 + r;
+        return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a), nx: -Math.cos(a), ny: -Math.sin(a) };
+      }
+      function strokeSpan(d0, d1, steps) {
+        ctx.beginPath();
+        for (let i = 0; i <= steps; i++) {
+          const p = at(d0 + (d1 - d0) * i / steps);
+          if (i) ctx.lineTo(p.x, p.y); else ctx.moveTo(p.x, p.y);
+        }
+        ctx.stroke();
+      }
+      function occupied() {
+        const { P } = geo, BL = P / N;
+        const front = s * P, back = front - BL * 0.55;
+        const blockOf = d => Math.floor((((d % P) + P) % P) / BL);
+        return [...new Set([blockOf(back), blockOf(front)])];
+      }
+      function draw() {
+        if (!geo) return;
+        ctx.clearRect(0, 0, W, H);
+        const { P } = geo, BL = P / N, GAP = 3;
+        const accent = css('--accent'), free = css('--ink-3'), ink = css('--ink');
+        const ink2 = css('--ink-2'), paper = css('--paper'), dim = css('--paper-3');
+        const occ = occupied();
+        ctx.lineCap = 'butt'; ctx.lineWidth = 6;
+        for (let k = 0; k < N; k++) {
+          ctx.strokeStyle = occ.includes(k) ? accent : free;
+          strokeSpan(k * BL + GAP, (k + 1) * BL - GAP, 16);
+        }
+        ctx.font = '11px system-ui, sans-serif';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        for (let k = 0; k < N; k++) {
+          const p = at((k + 0.5) * BL), on = occ.includes(k);
+          ctx.beginPath();
+          ctx.arc(p.x + p.nx * 18, p.y + p.ny * 18, 4.5, 0, Math.PI * 2);
+          ctx.fillStyle = on ? accent : dim; ctx.fill();
+          ctx.lineWidth = 1; ctx.strokeStyle = on ? accent : free; ctx.stroke();
+          ctx.fillStyle = ink2;
+          ctx.fillText(String(k + 1), p.x + p.nx * 34, p.y + p.ny * 34);
+        }
+        const front = s * P;
+        ctx.lineCap = 'round'; ctx.lineWidth = 10; ctx.strokeStyle = ink;
+        strokeSpan(front - BL * 0.55, front, 12);
+        const f = at(front);
+        ctx.beginPath(); ctx.arc(f.x, f.y, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = paper; ctx.fill();
+        const nums = occ.map(k => k + 1);
+        const text = nums.length > 1 ? 'Blocks ' + nums[0] + ' and ' + nums[1] : 'Block ' + nums[0];
+        if (text !== lastText) {
+          lastText = text;
+          occOut.textContent = text;
+          canvas.setAttribute('aria-label', 'Track loop with a train moving between blocks. Occupied: ' + text);
+        }
+      }
+      function loop(t) {
+        raf = 0;
+        const dt = last ? Math.min(50, t - last) : 16;
+        last = t;
+        if (playing) s = (s + dt / LAP_MS) % 1;
+        draw();
+        if (playing && visible) raf = requestAnimationFrame(loop);
+        else last = 0;
+      }
+      const kick = () => { if (!raf) raf = requestAnimationFrame(loop); };
+      function setPlaying(p) {
+        playing = p;
+        btn.textContent = p ? 'Pause' : 'Play';
+        kick();
+      }
+      btn.addEventListener('click', () => setPlaying(!playing));
+      canvas.addEventListener('click', () => setPlaying(!playing));
+      canvas.tabIndex = 0;
+      canvas.addEventListener('keydown', e => {
+        let dir = 0;
+        if (e.key === 'ArrowRight') dir = 1;
+        else if (e.key === 'ArrowLeft') dir = -1;
+        else if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); setPlaying(!playing); return; }
+        else return;
+        e.preventDefault();
+        s = ((((Math.floor(s * N) + dir) % N) + N) % N + 0.6) / N;
+        setPlaying(false);
+      });
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(entries => {
+          visible = entries[0].isIntersecting;
+          if (visible) kick();
+        }, { threshold: 0.2 }).observe(canvas);
+      } else {
+        visible = true;
+      }
+      function resize() {
+        const rect = canvas.getBoundingClientRect();
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        W = rect.width; H = rect.height;
+        canvas.width = Math.round(W * dpr);
+        canvas.height = Math.round(H * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        layout();
+        kick();
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', kick);
+      if ('ResizeObserver' in window) new ResizeObserver(resize).observe(canvas);
+      else window.addEventListener('resize', resize);
+      btn.textContent = playing ? 'Pause' : 'Play';
       resize();
     });
   </script>
